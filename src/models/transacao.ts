@@ -5,4 +5,5 @@ export interface Transacao {
     descricao: string
     valor: number
     ordem: number
+    id: string
 }
