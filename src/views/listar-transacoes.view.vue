@@ -1,47 +1,53 @@
 <script setup lang="ts">
     import type { Transacao } from '@/models/transacao'
-    import { ref, type Ref, computed } from 'vue'
+    import { ref, type Ref, computed, reactive } from 'vue'
     import ListaItems from '../components/ListaItems.vue'
 
+    const pagina = ref(1);
+
     const isButtonDisabled = computed(() => {
-        return !(itemsPagina.value.length > 5)
+        return !(listaTransacoes.length > 5)
     });
+    const saldoNegativo = computed( () => {
+        return saldo.value<0
+    })
 
     const saldo = computed(()=>{
-        return itemsPagina.value.reduce((acc, currentValue)=> acc + currentValue.valor, 0)
+        return itemsPagina.value.reduce((acc, currentValue)=> {
+            if(currentValue.tipo === "DEBITO")
+                { return acc -= currentValue.valor  }
+            return acc += currentValue.valor
+        }, 0)
     })
+
     const { listaTransacoes } = defineProps<{
         listaTransacoes: Transacao[]
         deletarTransacao: (descricao: string) => void
-        sortTransacoes: () => void 
+        sortTransacoes: () => void
     }>()
+
     let itemsPagina = computed(()=>{
-        return listaTransacoes
+        return listaTransacoes.slice(pagina.value*5-5, pagina.value*5)
     })
+
+    function mudarPagina(dir: 'prox' | "anterior" ){
+        if(dir === "prox"){
+            return pagina.value = pagina.value + 1
+        }
+
+        return pagina.value = pagina.value - 1
+    }
+
     const emit = defineEmits<{
         (e: 'deletarTransacao', descricao: string): void;
         (e: 'sortTransacoes'): void;
     }>();
-    const TAMANHO_PAGINA = 5
-    let pagina = 0
-
-
-    function mostrarPagina(pagina: number) {
-        const inicio = (TAMANHO_PAGINA * pagina)
-    }
-
-    function atualizarSaldoEPagina() {
-        mostrarPagina(pagina)
-    }
-
     function deletarTransacao(descricao: string) {
         emit('deletarTransacao', descricao);
-        atualizarSaldoEPagina()
     }
 
     function sortTransacoes() {
         emit('sortTransacoes');
-        atualizarSaldoEPagina()
     }
 
     function moveUp(descricao: string) {
@@ -71,49 +77,36 @@
 
         sortTransacoes()
     }
-
-    function nextPagina() {
-        if (pagina + 1 > listaTransacoes.length % 5)
-            return
-        mostrarPagina(++pagina)
-    }
-
-    function prevPagina() {
-        if (pagina - 1 < 0)
-            return
-        mostrarPagina(--pagina)
-    }
-
 </script>
 
 <template>
     <section>
         <ListaItems :transacoes="itemsPagina" @delete="deletarTransacao($event)" @up="moveUp($event)"
             @down="moveDown($event)"></ListaItems>
-        
+
         <p id="saldo" v-bind:class="saldo < 0 ? 'amayellow' : ''">Saldo: <span class="highlight">{{ saldo }}</span></p>
 
         <div class="lista-footer">
-            <button :disabled="isButtonDisabled" @click="prevPagina()">Anterior</button>
-            <button :disabled="isButtonDisabled" @click="nextPagina()">Próximo</button>
+            <button :disabled="isButtonDisabled || pagina === 1" @click="mudarPagina('anterior')">Anterior</button>
+            <button :disabled="isButtonDisabled || pagina * 5 - 5 > pagina" @click="mudarPagina('prox')">Próximo</button>
         </div>
     </section>
 </template>
 
 <style>
-
-#saldo{
-    margin-block: 16px;
-}
-.lista-footer{
-    display: flex;
-    gap: 12px;
-    margin-block: 16px;
-}
-.amayellow {
-    color: red;
-    background-color: yellow;
-}
-
-
+    #saldo{
+        margin-block: 16px;
+        padding-left: 5px;
+    }
+    .lista-footer{
+        display: flex;
+        gap: 12px;
+        margin-block: 16px;
+    }
+    .amayellow {
+        color: yellow;
+        background-color: red;
+        border-radius: 5px;
+        padding-left: 5px;
+    }
 </style>

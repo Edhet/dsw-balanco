@@ -4,8 +4,6 @@ import type { Transacao } from './models/transacao';
 export default {
     methods: {
         estiloRota(nomeBotao: "criar"| "listar") {
-            console.log(nomeBotao)
-            console.log(this.$route.name)
 
             if(nomeBotao === "criar" && this.$route.name === 'nova-transacao'){
                 return {

@@ -9,21 +9,22 @@ const emit = defineEmits<{
     }>();
 
 const novaTransacao: Ref<Omit<Transacao, 'id'>> = ref({
-    descricao: '',  
+    descricao: '',
     valor: 0,
     tipo: TipoTransacao.CREDITO,
     ordem: 0
 })
 
 function adicionarTransacao() {
-    if (!novaTransacao.value.descricao || !novaTransacao.value.valor) return
+    if (!novaTransacao.value.descricao || !novaTransacao.value.valor)
+    {alert("Não foi possível criar transação!");return}
 
     const transacaoCriada = Object.assign({
         id: uuidv4()
     }, novaTransacao.value)
+
     novaTransacao.value.descricao = ''
     novaTransacao.value.valor = 0
-    
 
     emit('adicionaTransacao', transacaoCriada);
 }
@@ -64,7 +65,7 @@ function adicionarTransacao() {
         </div>
 
         <button type="submit">Criar</button>
-    </form> 
+    </form>
     </section>
 </template>
 
@@ -76,7 +77,7 @@ function adicionarTransacao() {
     form h2{
         font-weight: bold;
         margin-bottom: 16px;
-        
+
     }
 
     form .field{
