@@ -3,16 +3,16 @@ import type { Transacao } from './models/transacao';
 
 export default {
     methods: {
-        estiloRota(nomeBotao: "criar"| "listar") {
+        estiloRota(nomeBotao: "criar" | "listar") {
 
-            if(nomeBotao === "criar" && this.$route.name === 'nova-transacao'){
+            if (nomeBotao === "criar" && this.$route.name === 'nova-transacao') {
                 return {
                     backgroundColor: "white",
                     color: "black"
                 };
             }
 
-            if(nomeBotao === "listar" && this.$route.name === 'listar-transacoes'){
+            if (nomeBotao === "listar" && this.$route.name === 'listar-transacoes') {
                 return {
                     backgroundColor: "white",
                     color: "black"
@@ -24,8 +24,8 @@ export default {
         },
 
         deletarTransacao(id: string) {
-            this.listaTransacoes = this.listaTransacoes.filter((transacao)=> id !== transacao.id).map((transacao)=>{
-                return{
+            this.listaTransacoes = this.listaTransacoes.filter((transacao) => id !== transacao.id).map((transacao) => {
+                return {
                     ...transacao,
                     ordem: transacao.ordem - 1
                 }
@@ -36,20 +36,19 @@ export default {
             this.listaTransacoes = this.listaTransacoes.sort((t1, t2) => t1.ordem - t2.ordem)
         },
 
-        adicionaTransacao(transacaoCriada: Transacao){
-            if (!transacaoCriada || this.listaTransacoes.map(t => t.descricao).includes(transacaoCriada.descricao))
-            { alert("Transação já criada!"); return}
+        adicionaTransacao(transacaoCriada: Transacao) {
+            if (!transacaoCriada || this.listaTransacoes.map(t => t.descricao).includes(transacaoCriada.descricao)) { alert("Transação já criada!"); return }
 
             let lattest = 1
             this.listaTransacoes.forEach(t => {
-             if (t.ordem && t.ordem >= lattest) lattest = t.ordem + 1
+                if (t.ordem && t.ordem >= lattest) lattest = t.ordem + 1
             })
 
             transacaoCriada.ordem = lattest;
             this.listaTransacoes.push(transacaoCriada)
         }
     },
-    data(){
+    data() {
         return {
             listaTransacoes: [] as unknown as Transacao[]
         }
@@ -62,7 +61,9 @@ export default {
         <header>
             <h1>Balanço</h1>
             <p> Com esta aplicação, você pode registrar e acompanhar todas as suas transações em uma única conta. </p>
-            <p>Adicione descrições e valores para cada entrada ou saída de dinheiro, e visualize automaticamente o saldo atualizado após cada movimentação. Simples, intuitivo e prático para ajudar você a manter suas finanças organizadas.</p>
+            <p>Adicione descrições e valores para cada entrada ou saída de dinheiro, e visualize automaticamente o saldo
+                atualizado após cada movimentação. Simples, intuitivo e prático para ajudar você a manter suas finanças
+                organizadas.</p>
 
             <div>
                 <RouterLink to="/">
@@ -75,32 +76,31 @@ export default {
 
             </div>
         </header>
-        <RouterView :listaTransacoes="listaTransacoes"                  @deletarTransacao="deletarTransacao" @sortTransacoes="sortTransacoes"
-        @adicionaTransacao="adicionaTransacao"
-        ></RouterView>
+        <RouterView :listaTransacoes="listaTransacoes" @deletarTransacao="deletarTransacao"
+            @sortTransacoes="sortTransacoes" @adicionaTransacao="adicionaTransacao"></RouterView>
     </main>
 </template>
 
 
 <style>
-
 header div {
     display: flex;
     gap: 12px;
 }
-header{
+
+header {
     width: 100%;
 }
 
-header h1{
+header h1 {
     font-weight: bold;
 }
 
-header p{
+header p {
     margin-bottom: 16px;
 }
 
-#app > main {
+#app>main {
     display: grid;
     gap: 32px;
     grid-template-columns: 1fr 1fr;
@@ -109,5 +109,4 @@ header p{
     max-width: 900px;
     margin: 0 auto;
 }
-
 </style>
