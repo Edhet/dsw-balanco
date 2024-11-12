@@ -30,9 +30,6 @@ export default {
                     ordem: transacao.ordem - 1
                 }
             })
-
-            console.log('Lista depois de deletar:')
-            console.log(this.listaTransacoes)
         },
 
         sortTransacoes() {
@@ -40,7 +37,8 @@ export default {
         },
 
         adicionaTransacao(transacaoCriada: Transacao){
-            if (!transacaoCriada || this.listaTransacoes.map(t => t.descricao).includes(transacaoCriada.descricao)) return
+            if (!transacaoCriada || this.listaTransacoes.map(t => t.descricao).includes(transacaoCriada.descricao))
+            { alert("Transação já criada!"); return}
 
             let lattest = 1
             this.listaTransacoes.forEach(t => {
@@ -49,7 +47,6 @@ export default {
 
             transacaoCriada.ordem = lattest;
             this.listaTransacoes.push(transacaoCriada)
-            console.log(this.listaTransacoes)
         }
     },
     data(){

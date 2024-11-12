@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import type { Transacao } from '@/models/transacao'
-    import { ref, type Ref, computed, reactive } from 'vue'
+    import { ref,  computed } from 'vue'
     import ListaItems from '../components/ListaItems.vue'
 
     const pagina = ref(1);
@@ -8,9 +8,6 @@
     const isButtonDisabled = computed(() => {
         return !(listaTransacoes.length > 5)
     });
-    const saldoNegativo = computed( () => {
-        return saldo.value<0
-    })
 
     const saldo = computed(()=>{
         return itemsPagina.value.reduce((acc, currentValue)=> {
